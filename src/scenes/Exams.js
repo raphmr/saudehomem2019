@@ -30,9 +30,10 @@ export default class Details extends React.Component {
       .finally(() => this.setState({ isLoading: false }));
   }
 
-  goToDetails = (item) => this.props.navigation.navigate('Details')
+  goToDetails = (item) => this.props.navigation.navigate('Details', item)
 
 renderItem = ({ item }) => {
+  item.title = item.name
   return (
     <Card
         key={item.id}
