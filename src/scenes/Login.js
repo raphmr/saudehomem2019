@@ -26,6 +26,10 @@ class Login extends Component {
         <Text style={styles.welcome}>Saúde do Homem</Text>
         <Button
           onPress={() => this.props.navigation.navigate('Home')}
+          title="Login"
+        />
+        <Button style={{paddingTop : "90px"}}
+          onPress={() => this.props.navigation.navigate('Home')}
           title="Acessar sem autenticar"
         />
       </View>
