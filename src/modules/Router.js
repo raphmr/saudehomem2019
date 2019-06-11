@@ -8,53 +8,119 @@ import Home from '../scenes/Home';
 import Details from '../scenes/Details';
 import Exams from '../scenes/Exams';
 import Info from '../scenes/Info';
+import Test from '../scenes/Test';
 
-const TabNavigator = createBottomTabNavigator({
-  Home: {
-    screen: Home,
-    navigationOptions: {
-      title: 'Notícias',
-      tabBarIcon: ({ _, tintColor }) => (
-        <Icon
-          name="newspaper"
-          color={tintColor}
-          size={26}
-        />
-      ),
+if (true) {
+  
+  var TabNavigator = createBottomTabNavigator({
+    Home: {
+      screen: Home,
+      navigationOptions: {
+        title: 'Notícias',
+        tabBarIcon: ({ _, tintColor }) => (
+          <Icon
+            name="newspaper"
+            color={tintColor}
+            size={26}
+          />
+        ),
+      }
+    },
+    Exams: {
+      screen: Exams,
+      navigationOptions: {
+        title: 'Exames',
+        tabBarIcon: ({ _, tintColor }) => (
+          <Icon
+            name="user-md"
+            color={tintColor}
+            size={26}
+          />
+        ),
+      }
+    },
+    Info: {
+      screen: Info,
+      navigationOptions: {
+        title: 'Sobre',
+        tabBarIcon: ({ _, tintColor }) => (
+          <Icon
+            name="info-circle"
+            color={tintColor}
+            size={26}
+          />
+        ),
+      }
+    },
+    Test: {
+      screen: Test,
+      navigationOptions: {
+        title: 'Test',
+        tabBarIcon: ({ _, tintColor }) => (
+          <Icon
+            name="ankh"
+            color={tintColor}
+            size={26}
+          />
+        ),
+      }
     }
   },
-  Exams: {
-    screen: Exams,
-    navigationOptions: {
-      title: 'Exames',
-      tabBarIcon: ({ _, tintColor }) => (
-        <Icon
-          name="user-md"
-          color={tintColor}
-          size={26}
-        />
-      ),
+  { tabBarOptions: {
+    showLabel: true, // hide labels
+    activeTintColor: '#459CD1',
+    inactiveTintColor: '#000',
+  }})
+
+} else {
+
+  var TabNavigator = createBottomTabNavigator({
+    Home: {
+      screen: Home,
+      navigationOptions: {
+        title: 'Notícias',
+        tabBarIcon: ({ _, tintColor }) => (
+          <Icon
+            name="newspaper"
+            color={tintColor}
+            size={26}
+          />
+        ),
+      }
+    },
+    Exams: {
+      screen: Exams,
+      navigationOptions: {
+        title: 'Exames',
+        tabBarIcon: ({ _, tintColor }) => (
+          <Icon
+            name="user-md"
+            color={tintColor}
+            size={26}
+          />
+        ),
+      }
+    },
+    Info: {
+      screen: Info,
+      navigationOptions: {
+        title: 'Sobre',
+        tabBarIcon: ({ _, tintColor }) => (
+          <Icon
+            name="info-circle"
+            color={tintColor}
+            size={26}
+          />
+        ),
+      }
     }
   },
-  Info: {
-    screen: Info,
-    navigationOptions: {
-      title: 'Sobre',
-      tabBarIcon: ({ _, tintColor }) => (
-        <Icon
-          name="info-circle"
-          color={tintColor}
-          size={26}
-        />
-      ),
-    }
-  }
-},
-{ tabBarOptions: {
-  showLabel: true, // hide labels
-  activeTintColor: '#459CD1',
-  inactiveTintColor: '#000',
-}})
+  { tabBarOptions: {
+    showLabel: true, // hide labels
+    activeTintColor: '#459CD1',
+    inactiveTintColor: '#000',
+  }})
+}
 
 const Router = createStackNavigator({
   Login: {
