@@ -34,3 +34,44 @@ export const salvarExame = async (exame) => {
         );
     });
 }
+
+export const deletarExames = async () => {
+  db.transaction(function (transaction) {
+    transaction.executeSql(
+      'DELETE FROM exames', [],
+      (transaction, results) => {
+        console.log('Results', results.rowsAffected);
+        if (results.rowsAffected > 0) {
+          console.log('Success');
+        } else {
+          console.log('Failed');
+        }
+      }
+    );
+  });
+}
+
+export const inicializarTabelaExames = async () => {
+  db.transaction(function(transaction) {
+    transaction.executeSql(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='exames'",
+      [],
+      function(tx, res) {
+        console.log('item:', res.rows.length);
+        if (res.rows.length == 0) {
+        transaction.executeSql('DROP TABLE IF EXISTS exames', []);
+          transaction.executeSql(
+            `CREATE TABLE IF NOT EXISTS exames
+            (_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+              nome VARCHAR(50), 
+              idadeRecomendada INT, 
+              frequencia VARCHAR(30),
+              detalhes VARCHAR(2000) 
+              )`,
+            []
+          );
+        }
+      }
+    );
+  });
+}

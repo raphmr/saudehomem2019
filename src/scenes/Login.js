@@ -6,53 +6,15 @@ import {
   Image,
   Button,
 } from 'react-native';
-import { openDatabase } from 'react-native-sqlite-storage';
 import logo from '../assets/saudedohomem.png';
-
-var db = openDatabase({ name: 'SaudeHomemDatabase.db' });
+import { inicializarTabelaExames } from '../services/dbhelper'
 
 // TODO - ADD LOGIN WITH FACEBOOK
 class Login extends Component {
 
   constructor(props) {
     super(props);
-    db.transaction(function(transaction) {
-      transaction.executeSql(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='exames'",
-        [],
-        function(tx, res) {
-          console.log('item:', res.rows.length);
-          if (res.rows.length == 0) {
-          console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAA:');
-          transaction.executeSql('DROP TABLE IF EXISTS exames', []);
-            transaction.executeSql(
-              `CREATE TABLE IF NOT EXISTS exames
-              (_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                nome VARCHAR(50), 
-                idadeRecomendada INT, 
-                frequencia VARCHAR(30),
-                detalhes VARCHAR(2000) 
-                )`,
-              []
-            );
-          }
-        }
-      );
-    });
-
-    db.transaction(function (transaction) {
-        transaction.executeSql(
-          'DELETE FROM exames', [],
-          (transaction, results) => {
-            console.log('Results', results.rowsAffected);
-            if (results.rowsAffected > 0) {
-              console.log('Success');
-            } else {
-              console.log('Failed');
-            }
-          }
-        );
-      });
+    inicializarTabelaExames();
   }
 
   render() {
