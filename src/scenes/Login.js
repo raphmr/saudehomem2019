@@ -67,10 +67,12 @@ class Login extends Component {
           onPress={() => this.props.navigation.navigate('Home')}
           title="Login"
         />
-        <Button style={{paddingTop : "90px"}}
-          onPress={() => this.props.navigation.navigate('Home')}
-          title="Acessar sem autenticar"
-        />
+        <View style={{marginTop: 20}}>
+          <Button buttonStyle={{paddingTop: '90px'}}
+            onPress={() => this.props.navigation.navigate('Home')}
+            title="Acessar sem autenticar"
+          />
+        </View>
       </View>
     );
   }

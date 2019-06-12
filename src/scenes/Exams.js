@@ -2,10 +2,8 @@ import React from 'react';
 import { FlatList, ActivityIndicator, ScrollView, View, Text, Button } from 'react-native';
 import Header from '../components/Header';
 import Card from '../components/Card';
-import { openDatabase } from 'react-native-sqlite-storage';
-
-var db = openDatabase({ name: 'SaudeHomemDatabase.db' });
-
+import { getExames as getExamesFromAPI } from '../services/api' 
+import { getExames as getExamesFromDB, salvarExame } from '../services/dbhelper' 
 
 export default class Details extends React.Component {
 
@@ -20,14 +18,11 @@ export default class Details extends React.Component {
   }
 
   getExamesFromApi = () => {
-    //return fetch('https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json')
-    //return fetch('http://10.197.9.209:3000/api/exames')
-    return fetch('https://5cf05f1e5660c40014949881.mockapi.io/api/exames')
-      .then((response) => response.json())
-      .then((responseJson) => {
+    let exames = getExamesFromAPI();
 
-        //let examesFiltrados = responseJson.filter(exame => exame.idade <= 40);
-        let examesFiltrados = responseJson;
+    exames.then((exames) => {
+        //let examesFiltrados = exames.filter(exame => exame.idade <= 40);
+        let examesFiltrados = exames;
 
         this.setState({
           exames: examesFiltrados,
@@ -44,53 +39,22 @@ export default class Details extends React.Component {
   goToDetails = (item) => this.props.navigation.navigate('Details', item);
 
   getExames = () => {
+    let exames = getExamesFromDB();
 
-    return new Promise((resolve, reject) => {
-      db.transaction(tx => {
-        tx.executeSql('SELECT * FROM exames', [], (tx, results) => {
-          let temp = [];
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push(results.rows.item(i));
-          }
+    if (exames.length > 0) {
+        this.setState({
+          exames: exames,
+          isLoading: false,
+          showList: true,
+          wasFromDB: true
+        })
+    } else {
+      this.getExamesFromApi();
+    }
 
-          console.log(temp.length);
-
-          if (temp.length > 0) {
-            resolve(
-              this.setState({
-                exames: temp,
-                isLoading: false,
-                showList: true,
-                wasFromDB: true
-              })
-            );
-          } else {
-            console.log('ta no else porra');
-            resolve (this.getExamesFromApi());
-          }
-
-        });
-      });
-    });
-  }
+  };
 
   renderItem = ({ item }) => {
-
-    // db.transaction(function (transaction) {
-    //   transaction.executeSql(
-    //     'INSERT INTO exames (nome, idadeRecomendada, frequencia, detalhes) VALUES (?,?,?,?)',
-    //     [item.title, item.idade, item.frequencia, item.content],
-    //     (transaction, results) => {
-    //       console.log('Results', results.rowsAffected);
-    //       if (results.rowsAffected > 0) {
-    //         console.log('Success');
-    //       } else {
-    //         console.log('Failed');
-    //       }
-    //     }
-    //   );
-    // });
-
     if (this.state.wasFromDB) {
       item.image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/SQLite370.svg/1200px-SQLite370.svg.png'
     } else {
