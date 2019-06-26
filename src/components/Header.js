@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 const Header = ({ title }) => (
-  <View style={{ backgroundColor: '#459CD1', padding: 20 }}>
+  <View style={{ backgroundColor: '#459CD1', padding: 20, alignItems: 'center' }}>
     <Text style={{ fontSize: 35, fontWeight: 'bold' }}>
       {title}
     </Text>

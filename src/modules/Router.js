@@ -58,7 +58,7 @@ if (true) {
         title: 'Test',
         tabBarIcon: ({ _, tintColor }) => (
           <Icon
-            name="ankh"
+            name="air-freshener"
             color={tintColor}
             size={26}
           />

@@ -1,9 +1,10 @@
 import React from 'react';
-import { FlatList, ActivityIndicator, ScrollView, View, Text, Button } from 'react-native';
+import { FlatList, ActivityIndicator, ScrollView, View, Text, Button, TouchableOpacity } from 'react-native';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import { getExames as getExamesFromAPI } from '../services/api' 
 import { getExames as getExamesFromDB, salvarExame } from '../services/dbhelper' 
+import DatePicker from 'react-native-datepicker'
 
 export default class Details extends React.Component {
 
@@ -13,7 +14,8 @@ export default class Details extends React.Component {
       isLoading: false,
       showList: false,
       exames: [],
-      wasFromDB: false
+      dataNascimento: '',
+      idade: 0
     }
   }
 
@@ -21,13 +23,14 @@ export default class Details extends React.Component {
     let exames = getExamesFromAPI();
 
     exames.then((exames) => {
-        //let examesFiltrados = exames.filter(exame => exame.idade <= 40);
-        let examesFiltrados = exames;
+      let dataAtual = new Date();
+      let idade = dataAtual.getFullYear() - parseInt(this.state.dataNascimento.split('-')[2])
+      this.setState({idade})
+      let examesFiltrados = exames.filter(exame => exame.idade <= idade);
 
-        this.setState({
-          exames: examesFiltrados,
-          wasFromDB: false
-        });
+      this.setState({
+        exames: examesFiltrados
+      });
 
       })
       .catch((error) => {
@@ -39,27 +42,11 @@ export default class Details extends React.Component {
   goToDetails = (item) => this.props.navigation.navigate('Details', item);
 
   getExames = () => {
-    let exames = getExamesFromDB();
-
-    if (exames.length > 0) {
-        this.setState({
-          exames: exames,
-          isLoading: false,
-          showList: true,
-          wasFromDB: true
-        })
-    } else {
       this.getExamesFromApi();
-    }
-
   };
 
   renderItem = ({ item }) => {
-    if (this.state.wasFromDB) {
-      item.image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/SQLite370.svg/1200px-SQLite370.svg.png'
-    } else {
-      item.image = 'https://cromossomoy.com/files/styles/imagem_artigo__630x277_/public/artigos/exame-medico.jpg?itok=2nSEfag'
-    }
+    item.image = 'https://cromossomoy.com/files/styles/imagem_artigo__630x277_/public/artigos/exame-medico.jpg?itok=2nSEfag'
 
     return (
       <Card
@@ -84,6 +71,13 @@ export default class Details extends React.Component {
       return (
         <ScrollView style={{ backgroundColor: 'white' }}>
           <Header title={'Exames Recomendados'} />
+          <Text style={{ fontSize: 20, textAlign: 'left' }}>
+            Sua idade: {this.state.idade}
+          </Text>
+          <Button buttonStyle={{width: 100}}
+            onPress={() => this.setState({showList: false})}
+            title="Voltar"
+          />
           <View style={{ flex: 1, paddingTop: 20 }}>
             <FlatList
               data={this.state.exames}
@@ -92,7 +86,6 @@ export default class Details extends React.Component {
             />
           </View>
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 80, textAlign: 'center' }}>🥜🌭🥜</Text>
           </View>
         </ScrollView>
       );
@@ -104,13 +97,46 @@ export default class Details extends React.Component {
         <View style={{ flex: 1, paddingTop: 20 }}>
         </View>
         <View style={{ alignItems: 'center' }}>
-          <Button
-            onPress={this.getExames}
-            title="Pegar Exames"
-          />
-          <Text style={{ fontSize: 80, textAlign: 'center' }}>🥜🌭🥜</Text>
+
+        
+          <DatePicker
+            style={{width: 200}}
+            date={this.state.dataNascimento}
+            mode="date"
+            placeholder="Data de nascimento..."
+            format="DD-MM-YYYY"
+            confirmBtnText="Confirmar"
+            cancelBtnText="Cancelar"
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+        }}
+        onDateChange={(date) => {this.setState({dataNascimento: date})}}
+      />
+      <TouchableOpacity 
+        disabled={this.state.dataNascimento == ''} 
+        style={{alignItems: 'center',
+        backgroundColor: '#4eabe5',
+        marginTop: 20,
+        padding: 10}}
+        onPress={this.getExames}>
+        <Text style={{
+        color:'white',
+        fontWeight:'bold',}}>PEGAR EXAMES</Text>
+      </TouchableOpacity>
+
+          <Text style={{ fontSize: 80, textAlign: 'center' }}></Text>
         </View>
       </ScrollView>
     );
   }
+
+  
 }
